@@ -67,7 +67,7 @@ const ToastItem = ({ notification, onRemove }) => {
   };
 
   return (
-    <div className={`${getToastStyles()} pointer-events-auto`}>
+    <div className={`${getToastStyles()} pointer-events-auto`} style={{marginLeft: '200px'}}>
       <div className="toast-content">
         <div className="toast-icon">{getIcon()}</div>
         <div className="toast-message">
