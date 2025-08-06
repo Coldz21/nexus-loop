@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const NotificationToast = ({ notifications, removeNotification }) => {
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 space-y-3 pointer-events-none" style={{paddingLeft: '200px', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 space-y-3 pointer-events-none" style={{paddingLeft: '200px', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', zIndex: 9999, position: 'fixed'}}>
       {notifications.map((notification) => (
         <ToastItem
           key={notification.id}
