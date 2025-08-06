@@ -184,10 +184,10 @@ const Sidebar = ({ user, onLogout, collapsed, onToggle, isMobile, onNavigate }) 
 
 
       {/* System Info and Logout */}
-      <div className="system-info-section border-t border-gray-200 mt-auto" style={{padding: '2px 20px 16px 20px'}}>
+      <div className="system-info-section border-t border-gray-200 mt-auto" style={{padding: '2px 20px 84px 20px'}}>
         {(!collapsed || isMobile) && (
           <>
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center" style={{margin: '20px 0 24px'}}>System</div>
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center" style={{margin: '10px 0 24px'}}>System</div>
             <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-3 border border-green-200 mb-4">
               <div className="flex flex-col gap-3 text-xs mb-2">
                 <div className="flex flex-row">
