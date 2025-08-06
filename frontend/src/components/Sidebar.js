@@ -131,7 +131,7 @@ const Sidebar = ({ user, onLogout, collapsed, onToggle, isMobile, onNavigate }) 
       {/* Logo/Brand */}
       <div className="border-b border-gray-200 relative">
         <div className="text-center">
-          <h1 className={`text-lg font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent sidebar-brand-title ${collapsed && !isMobile ? 'hidden' : ''}`}>
+          <h1 className={`text-lg font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent sidebar-brand-title ${collapsed && !isMobile ? 'hidden' : ''}`} style={{paddingRight: '1px', marginRight: '-2px'}}>
             NexusRealtyNC
           </h1>
           {collapsed && !isMobile && (
@@ -148,8 +148,8 @@ const Sidebar = ({ user, onLogout, collapsed, onToggle, isMobile, onNavigate }) 
         <div className={`flex items-center ${collapsed && !isMobile ? 'justify-center' : 'space-x-3'} p-2 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200`}>
           {(!collapsed || isMobile) && (
             <div className="user-info flex-1">
-              <p className="text-xs font-bold text-gray-900">{user?.name}</p>
-              <p className="text-xs text-gray-600 capitalize font-medium">{user?.role}</p>
+              <p className="text-xs font-bold text-gray-900" style={{marginLeft: '10px'}}>{user?.name}</p>
+              <p className="text-xs text-gray-600 capitalize font-medium" style={{marginLeft: '10px'}}>{user?.role}</p>
             </div>
           )}
         </div>
@@ -184,10 +184,10 @@ const Sidebar = ({ user, onLogout, collapsed, onToggle, isMobile, onNavigate }) 
 
 
       {/* System Info and Logout */}
-      <div className="system-info-section border-t border-gray-200 mt-auto" style={{padding: '12px 20px 16px 20px'}}>
+      <div className="system-info-section border-t border-gray-200 mt-auto" style={{padding: '2px 20px 84px 20px'}}>
         {(!collapsed || isMobile) && (
           <>
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center mb-3">System</div>
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center" style={{margin: '10px 0 24px'}}>System</div>
             <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-3 border border-green-200 mb-4">
               <div className="flex flex-col gap-3 text-xs mb-2">
                 <div className="flex flex-row">
@@ -201,13 +201,10 @@ const Sidebar = ({ user, onLogout, collapsed, onToggle, isMobile, onNavigate }) 
               <div className="flex items-start flex-col gap-3 justify-between text-xs">
                 <div className="flex flex-row">
                   <span className="text-gray-600 font-medium">Version</span>
-                  <span className="text-gray-800 font-bold version-number">v1.0.0</span>
+                  <span className="text-gray-800 font-bold version-number" style={{marginLeft: '160px'}}>v1.0.0</span>
                 </div>
               </div>
             </div>
-            <p className="text-xs text-gray-400 text-center font-medium mb-3">
-              @Nexus Realty NC
-            </p>
           </>
         )}
 
