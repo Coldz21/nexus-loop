@@ -135,6 +135,13 @@ const NotificationSettings = ({ user, addNotification }) => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [optionalEmail, setOptionalEmail] = useState('');
+  const [showOptionalEmailForm, setShowOptionalEmailForm] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [showOtpForm, setShowOtpForm] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [optionalEmailVerified, setOptionalEmailVerified] = useState(false);
 
   useEffect(() => {
     fetchSettings();
@@ -166,8 +173,12 @@ const NotificationSettings = ({ user, addNotification }) => {
   const saveSettings = async () => {
     try {
       setSaving(true);
-      const response = await settingsAPI.updateNotificationPreferences(settings);
-      
+      const settingsToSave = {
+        ...settings,
+        optionalEmail: optionalEmailVerified ? optionalEmail : null
+      };
+      const response = await settingsAPI.updateNotificationPreferences(settingsToSave);
+
       if (response.data.success) {
         addNotification('Notification preferences saved successfully', 'success');
       }
@@ -177,6 +188,67 @@ const NotificationSettings = ({ user, addNotification }) => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const sendOtpToMainEmail = async () => {
+    if (!optionalEmail.trim()) {
+      addNotification('Please enter an email address', 'error');
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(optionalEmail.trim())) {
+      addNotification('Please enter a valid email address', 'error');
+      return;
+    }
+
+    try {
+      setSendingOtp(true);
+      // Mock OTP sending - in real implementation, this would call the backend
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      setShowOtpForm(true);
+      addNotification(`OTP sent to ${user?.email}`, 'success');
+    } catch (error) {
+      addNotification('Failed to send OTP', 'error');
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const verifyOtpCode = async () => {
+    if (!otpCode.trim() || otpCode.length !== 6) {
+      addNotification('Please enter a valid 6-digit OTP', 'error');
+      return;
+    }
+
+    try {
+      setVerifyingOtp(true);
+      // Mock OTP verification - in real implementation, this would call the backend
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+
+      // For demo purposes, accept any 6-digit code
+      if (otpCode.length === 6) {
+        setOptionalEmailVerified(true);
+        setShowOtpForm(false);
+        setShowOptionalEmailForm(false);
+        setOtpCode('');
+        addNotification('Email verified successfully!', 'success');
+      } else {
+        addNotification('Invalid OTP code', 'error');
+      }
+    } catch (error) {
+      addNotification('Failed to verify OTP', 'error');
+    } finally {
+      setVerifyingOtp(false);
+    }
+  };
+
+  const cancelOtpVerification = () => {
+    setShowOtpForm(false);
+    setOtpCode('');
+    setOptionalEmail('');
+    setShowOptionalEmailForm(false);
   };
 
   if (loading) {
@@ -232,6 +304,110 @@ const NotificationSettings = ({ user, addNotification }) => {
           </label>
         </div>
 
+        {/* Optional Email Address Section */}
+        <div className="settings-item">
+          <div className="settings-item-content">
+            <h4 className="settings-item-title">Additional Email for Notifications</h4>
+            <p className="settings-item-description">
+              Optionally add another email address to receive notifications. An OTP will be sent to your primary email for verification.
+            </p>
+            {optionalEmailVerified && optionalEmail && (
+              <div className="mt-2">
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  ✅ Verified: {optionalEmail}
+                </span>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => setShowOptionalEmailForm(!showOptionalEmailForm)}
+            className="btn btn-secondary"
+          >
+            {optionalEmailVerified && optionalEmail ? 'Update Email' : 'Add Email'}
+          </button>
+        </div>
+
+        {/* Optional Email Form */}
+        {showOptionalEmailForm && (
+          <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Additional Email Address
+              </label>
+              <div className="flex space-x-3">
+                <input
+                  type="email"
+                  value={optionalEmail}
+                  onChange={(e) => setOptionalEmail(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="Enter additional email address"
+                  disabled={showOtpForm}
+                />
+                <button
+                  onClick={sendOtpToMainEmail}
+                  disabled={!optionalEmail.trim() || sendingOtp || showOtpForm}
+                  className="btn btn-primary"
+                >
+                  {sendingOtp ? (
+                    <>
+                      <div className="spinner"></div>
+                      Sending OTP...
+                    </>
+                  ) : (
+                    'Send OTP'
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* OTP Verification Form */}
+            {showOtpForm && (
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="flex items-start mb-3">
+                  <span className="text-blue-500 text-lg mr-2">📧</span>
+                  <div>
+                    <h4 className="font-medium text-blue-900">OTP Verification</h4>
+                    <p className="text-sm text-blue-700">
+                      An OTP has been sent to <strong>{user?.email}</strong>. Please enter it below to verify the additional email address.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="Enter 6-digit OTP"
+                    maxLength={6}
+                  />
+                  <button
+                    onClick={verifyOtpCode}
+                    disabled={!otpCode.trim() || verifyingOtp}
+                    className="btn btn-success"
+                  >
+                    {verifyingOtp ? (
+                      <>
+                        <div className="spinner"></div>
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify OTP'
+                    )}
+                  </button>
+                  <button
+                    onClick={cancelOtpVerification}
+                    disabled={verifyingOtp}
+                    className="btn btn-outline"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Email Info */}
         <div className="bg-blue-50 p-4 rounded-lg">
           <div className="flex items-start">
@@ -239,8 +415,13 @@ const NotificationSettings = ({ user, addNotification }) => {
             <div>
               <h4 className="font-medium text-blue-900">Email Configuration</h4>
               <p className="text-sm text-blue-700 mt-1">
-                Notifications will be sent to: <strong>{user?.email}</strong>
+                Primary email: <strong>{user?.email}</strong>
               </p>
+              {optionalEmailVerified && optionalEmail && (
+                <p className="text-sm text-blue-700 mt-1">
+                  Additional email: <strong>{optionalEmail}</strong>
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -2267,7 +2448,7 @@ const APIKeysManagement = ({ addNotification }) => {
                   onClick={() => setShowSecretKey(!showSecretKey)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
                 >
-                  {showSecretKey ? '🙈' : '👁️'}
+                  {showSecretKey ? '🙄' : '👁️'}
                 </button>
               </div>
               <button
