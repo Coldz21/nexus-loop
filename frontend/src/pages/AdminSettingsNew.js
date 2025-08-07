@@ -45,7 +45,7 @@ const AdminSettingsNew = ({ user, addNotification }) => {
 
   // Tab configuration
   const tabs = [
-    { id: 'notifications', name: 'Email Notifications', icon: '��' },
+    { id: 'notifications', name: 'Email Notifications', icon: '📧' },
     { id: 'users', name: 'User Management', icon: '👥' },
     { id: 'activity', name: 'Activity Logs', icon: '📊' },
     { id: 'loops', name: 'All Transaction Loops', icon: '📋' },
@@ -2448,7 +2448,7 @@ const APIKeysManagement = ({ addNotification }) => {
                   onClick={() => setShowSecretKey(!showSecretKey)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
                 >
-                  {showSecretKey ? '⊗' : '○'}
+                  {showSecretKey ? '🚫' : '👁'}
                 </button>
               </div>
               <button
