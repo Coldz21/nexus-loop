@@ -2,19 +2,20 @@ import React, { useState, useEffect } from 'react';
 
 const NotificationToast = ({ notifications, removeNotification }) => {
   return (
-    <div className="fixed bottom-4 right-4 space-y-3 pointer-events-none max-w-sm w-full sm:w-auto" style={{zIndex: 9999}}>
-      {notifications.map((notification) => (
+    <div className="fixed bottom-4 right-4 space-y-3 pointer-events-none" style={{zIndex: 9999, maxWidth: '400px', width: 'calc(100vw - 2rem)'}}>
+      {notifications.map((notification, index) => (
         <ToastItem
           key={notification.id}
           notification={notification}
           onRemove={removeNotification}
+          zIndex={9999 - index} // Newer notifications have higher z-index
         />
       ))}
     </div>
   );
 };
 
-const ToastItem = ({ notification, onRemove }) => {
+const ToastItem = ({ notification, onRemove, zIndex }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -67,7 +68,7 @@ const ToastItem = ({ notification, onRemove }) => {
   };
 
   return (
-    <div className={`${getToastStyles()} pointer-events-auto w-full`}>
+    <div className={`${getToastStyles()} pointer-events-auto`} style={{zIndex, width: '100%', maxWidth: '400px'}}>
       <div className="toast-content">
         <div className="toast-icon">{getIcon()}</div>
         <div className="toast-message">
