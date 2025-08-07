@@ -2448,7 +2448,7 @@ const APIKeysManagement = ({ addNotification }) => {
                   onClick={() => setShowSecretKey(!showSecretKey)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
                 >
-                  {showSecretKey ? '🙄' : '👁️'}
+                  {showSecretKey ? '🔒' : '👁'}
                 </button>
               </div>
               <button
