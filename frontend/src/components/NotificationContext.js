@@ -24,7 +24,11 @@ export const NotificationProvider = ({ children }) => {
       ...options
     };
 
-    setNotifications(prev => [...prev, notification]);
+    setNotifications(prev => {
+      const newNotifications = [...prev, notification];
+      // Keep only the last 2 notifications
+      return newNotifications.slice(-2);
+    });
 
     return id;
   }, []);
