@@ -2361,6 +2361,27 @@ const APIKeysManagement = ({ addNotification }) => {
     ));
   };
 
+  const copyToClipboard = async (text, keyType) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      addNotification(`${keyType} copied to clipboard`, 'success');
+    } catch (error) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        addNotification(`${keyType} copied to clipboard`, 'success');
+      } catch (fallbackError) {
+        addNotification('Failed to copy to clipboard', 'error');
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -2414,27 +2435,40 @@ const APIKeysManagement = ({ addNotification }) => {
           {/* API Key */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">API Key</label>
-            <div className="flex space-x-3">
-              <input
-                type="text"
-                value={apiKeys.apiKey}
-                onChange={(e) => handleInputChange('apiKey', e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md font-mono text-sm"
-                placeholder="Enter your API key or generate a new one"
-              />
-              <button
-                onClick={generateAPIKey}
-                className="btn btn-secondary"
-              >
-                Generate
-              </button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  value={apiKeys.apiKey}
+                  onChange={(e) => handleInputChange('apiKey', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-sm pr-10"
+                  placeholder="Enter your API key or generate a new one"
+                  readOnly={!!apiKeys.apiKey}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => copyToClipboard(apiKeys.apiKey, 'API Key')}
+                  disabled={!apiKeys.apiKey}
+                  className="btn btn-outline flex items-center gap-1 whitespace-nowrap"
+                  title="Copy API Key"
+                >
+                  📋 Copy
+                </button>
+                <button
+                  onClick={generateAPIKey}
+                  className="btn btn-secondary whitespace-nowrap"
+                >
+                  Generate
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Secret Key */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Secret Key</label>
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
                 <input
                   type={showSecretKey ? "text" : "password"}
@@ -2442,21 +2476,33 @@ const APIKeysManagement = ({ addNotification }) => {
                   onChange={(e) => handleInputChange('secretKey', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono text-sm pr-10"
                   placeholder="Enter your secret key or generate a new one"
+                  readOnly={!!apiKeys.secretKey}
                 />
                 <button
                   type="button"
                   onClick={() => setShowSecretKey(!showSecretKey)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                  title={showSecretKey ? 'Hide secret key' : 'Show secret key'}
                 >
                   {showSecretKey ? '🚫' : '👁'}
                 </button>
               </div>
-              <button
-                onClick={generateSecretKey}
-                className="btn btn-secondary"
-              >
-                Generate
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => copyToClipboard(apiKeys.secretKey, 'Secret Key')}
+                  disabled={!apiKeys.secretKey}
+                  className="btn btn-outline flex items-center gap-1 whitespace-nowrap"
+                  title="Copy Secret Key"
+                >
+                  📋 Copy
+                </button>
+                <button
+                  onClick={generateSecretKey}
+                  className="btn btn-secondary whitespace-nowrap"
+                >
+                  Generate
+                </button>
+              </div>
             </div>
             <p className="text-xs text-red-600 mt-1">
               ⚠️ Keep your secret key private and secure. Do not share it publicly.
