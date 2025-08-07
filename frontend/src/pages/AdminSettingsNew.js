@@ -2451,10 +2451,11 @@ const APIKeysManagement = ({ addNotification }) => {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => copyToClipboard(apiKeys.apiKey, 'API Key')}
+                  onClick={(e) => copyToClipboard(e, apiKeys.apiKey, 'API Key')}
                   disabled={!apiKeys.apiKey}
                   className="btn btn-outline flex items-center gap-1 whitespace-nowrap"
                   title="Copy API Key"
+                  type="button"
                 >
                   📋 Copy
                 </button>
@@ -2492,10 +2493,11 @@ const APIKeysManagement = ({ addNotification }) => {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => copyToClipboard(apiKeys.secretKey, 'Secret Key')}
+                  onClick={(e) => copyToClipboard(e, apiKeys.secretKey, 'Secret Key')}
                   disabled={!apiKeys.secretKey}
                   className="btn btn-outline flex items-center gap-1 whitespace-nowrap"
                   title="Copy Secret Key"
+                  type="button"
                 >
                   📋 Copy
                 </button>
