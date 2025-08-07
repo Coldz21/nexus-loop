@@ -2361,7 +2361,10 @@ const APIKeysManagement = ({ addNotification }) => {
     ));
   };
 
-  const copyToClipboard = async (text, keyType) => {
+  const copyToClipboard = async (event, text, keyType) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     try {
       await navigator.clipboard.writeText(text);
       addNotification(`${keyType} copied to clipboard`, 'success');
