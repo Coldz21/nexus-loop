@@ -2361,9 +2361,11 @@ const APIKeysManagement = ({ addNotification }) => {
     ));
   };
 
-  const copyToClipboard = async (event, text, keyType) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const copyToClipboard = async (text, keyType) => {
+    if (!text) {
+      addNotification('No key to copy', 'error');
+      return;
+    }
 
     try {
       await navigator.clipboard.writeText(text);
@@ -2372,6 +2374,9 @@ const APIKeysManagement = ({ addNotification }) => {
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-9999px';
+      textArea.style.top = '-9999px';
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
